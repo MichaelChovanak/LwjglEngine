@@ -1,7 +1,7 @@
 /**
  * @author Michael Chovanak
  * LWJGL 2 Game Engine using OpenGL.
- * Made by following ThinMatrix's Youtube tutorials found here: 
+ * Made by following ThinMatrix's Youtube tutorials found here: https://www.youtube.com/playlist?list=PLRIWtICgwaX0u7Rf9zkZhLoLuZVfUksDP
  */
 
 package engineTester;
