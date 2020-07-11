@@ -82,12 +82,12 @@ public class MainGameLoop {
 			entities.add(new Entity(fern, random.nextInt(4), new Vector3f(x, y, z), 0, 0, 0, 0.6f));
 		}
 		
-		Light light = new Light(new Vector3f(0,10000,-7000), new Vector3f(1,0.9f,0.9f));
+		Light sun = new Light(new Vector3f(0,1000,-7000), new Vector3f(0.4f,0.4f,0.4f));
 		List<Light> lights = new ArrayList<>();
-		lights.add(light);
-		lights.add(new Light(new Vector3f(-200,10,-200), new Vector3f(10,0,0)));
-		lights.add(new Light(new Vector3f(200,10,200), new Vector3f(10,0,0)));
-		lights.add(new Light(new Vector3f(200,10,-200), new Vector3f(10,0,0)));
+		lights.add(sun);
+		lights.add(new Light(new Vector3f(-200,10,-200), new Vector3f(10,0,0), new Vector3f(1,0.01f,0.002f)));
+		lights.add(new Light(new Vector3f(200,10,200), new Vector3f(0,10,0), new Vector3f(1,0.01f,0.002f)));
+		lights.add(new Light(new Vector3f(200,10,-200), new Vector3f(0,0,10), new Vector3f(1,0.01f,0.002f)));
 		
 		
 		Player player = new Player(person, new Vector3f(0,0,0), 0, 180, 0, 0.4f);
@@ -95,7 +95,7 @@ public class MainGameLoop {
 		
 		List<GUITexture> guis = new ArrayList<GUITexture>();
 		GUITexture gui = new GUITexture(loader.loadTexture("socuwan"), new Vector2f(0.5f,0.5f), new Vector2f(0.25f, 0.25f));
-		guis.add(gui);
+		//guis.add(gui);
 		
 		GUIRenderer guiRenderer = new GUIRenderer(loader);
 		
