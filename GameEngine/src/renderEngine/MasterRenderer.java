@@ -15,6 +15,7 @@ import entities.Light;
 import models.TexturedModel;
 import shaders.StaticShader;
 import shaders.TerrainShader;
+import skybox.SkyboxRenderer;
 import terrain.Terrain;
 
 public class MasterRenderer {
@@ -23,9 +24,9 @@ public class MasterRenderer {
 	private static final float NEAR_PLANE = 0.1f;
 	private static final float FAR_PLANE = 1000f;
 	
-	private static final float RED = 0.75f;
-	private static final float GREEN = 0.9f;
-	private static final float BLUE = 1f;
+	private static final float RED = 0.504f;
+	private static final float GREEN = 0.59f;
+	private static final float BLUE = 0.65f;
 	
 	private Matrix4f projectionMatrix;
 
@@ -37,12 +38,15 @@ public class MasterRenderer {
 	private Map<TexturedModel, List<Entity>> entities = new HashMap<TexturedModel, List<Entity>>();
 	private List<Terrain> terrains = new ArrayList<Terrain>();
 	
-	public MasterRenderer()
+	private SkyboxRenderer skyboxRenderer;
+	
+	public MasterRenderer(Loader loader)
 	{
 		enableCulling();
 		createProjectionMatrix();
 		renderer = new EntityRenderer(shader, projectionMatrix);
 		terrainRenderer = new TerrainRenderer(terrainShader, projectionMatrix);
+		skyboxRenderer = new SkyboxRenderer(loader, projectionMatrix);
 	}
 	
 	public static void enableCulling()
@@ -71,6 +75,7 @@ public class MasterRenderer {
 		terrainShader.loadViewMatrix(camera);
 		terrainRenderer.render(terrains);
 		terrainShader.stop();
+		skyboxRenderer.render(camera, RED, GREEN, BLUE);
 		terrains.clear();
 		entities.clear();
 	}

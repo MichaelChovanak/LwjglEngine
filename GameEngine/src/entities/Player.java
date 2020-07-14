@@ -53,7 +53,6 @@ public class Player extends Entity{
 			lastTimeGrounded = DisplayManager.getCurrentTime();
 		}
 		super.increasePosition(0, 0.5f * verticalSpeed * timeInAir, 0);
-		System.out.println("verticalSpeed: "+verticalSpeed);
 		
 	}
 	

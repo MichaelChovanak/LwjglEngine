@@ -99,7 +99,7 @@ public class MainGameLoop {
 		
 		GUIRenderer guiRenderer = new GUIRenderer(loader);
 		
-		MasterRenderer renderer = new MasterRenderer();
+		MasterRenderer renderer = new MasterRenderer(loader);
 		while(!Display.isCloseRequested())
 		{
 			player.move(terrain0);
