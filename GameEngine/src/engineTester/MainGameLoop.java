@@ -28,6 +28,7 @@ import renderEngine.MasterRenderer;
 import terrain.Terrain;
 import textures.TerrainTexture;
 import textures.TerrainTexturePack;
+import toolbox.MousePicker;
 
 public class MainGameLoop {
 
@@ -100,10 +101,17 @@ public class MainGameLoop {
 		GUIRenderer guiRenderer = new GUIRenderer(loader);
 		
 		MasterRenderer renderer = new MasterRenderer(loader);
+		
+		MousePicker mousePicker = new MousePicker(camera, renderer.getProjectionMatrix());
+		
 		while(!Display.isCloseRequested())
 		{
 			player.move(terrain0);
 			camera.move();
+			
+			mousePicker.update();
+			System.out.println(mousePicker.getCurrentRay());
+			
 			renderer.processEntity(player);
 			renderer.processTerrain(terrain0);
 			//renderer.processTerrain(terrain1);
