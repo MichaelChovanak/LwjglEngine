@@ -85,7 +85,7 @@ public abstract class ShaderProgram
 		GL20.glUseProgram(0);
 	}
 	
-	public void cleanup()
+	public void cleanUp()
 	{
 		stop();
 		GL20.glDetachShader(programID, vertexShaderID);
@@ -101,6 +101,7 @@ public abstract class ShaderProgram
 	{
 		GL20.glBindAttribLocation(programID, attribute, variableName);
 	}
+	
 	private static int loadShader(String file, int type){
 		  StringBuilder shaderSource = new StringBuilder();
 		  try{

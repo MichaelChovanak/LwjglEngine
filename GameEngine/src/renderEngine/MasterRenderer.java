@@ -130,8 +130,8 @@ public class MasterRenderer {
 	
 	public void cleanUp()
 	{
-		shader.cleanup();
-		terrainShader.cleanup();
+		shader.cleanUp();
+		terrainShader.cleanUp();
 	}
 	
 	
