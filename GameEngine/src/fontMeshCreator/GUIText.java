@@ -18,7 +18,9 @@ public class GUIText {
 
 	private int textMeshVao;
 	private int vertexCount;
-	private Vector3f colour = new Vector3f(0f, 0f, 0f);
+	private Vector3f color = new Vector3f(1f, 1f, 1f);
+	private Vector3f outlineColor = new Vector3f(0f, 0f, 0f);
+	
 
 	private Vector2f position;
 	private float lineMaxSize;
@@ -27,6 +29,12 @@ public class GUIText {
 	private FontType font;
 
 	private boolean centerText = false;
+	
+	private float width;
+	private float edge;
+	private float borderWidth;
+	private float borderEdge;
+	private Vector2f offset = new Vector2f(0f,0f);
 
 	/**
 	 * Creates a new text, loads the text's quads into a VAO, and adds the text
@@ -61,6 +69,20 @@ public class GUIText {
 		this.position = position;
 		this.lineMaxSize = maxLineLength;
 		this.centerText = centered;
+		
+		this.width = 0.3f + fontSize * 0.03f;
+		if(this.width > 0.5f) {
+			this.width = 0.5f;
+		}
+		this.edge = 0.5f / fontSize;
+		if(this.edge < 0.01f) {
+			this.edge = 0.01f;
+		}
+		this.borderWidth = this.width + 0.05f + fontSize * 0.25f;
+		this.borderEdge = edge;
+		if(this.borderWidth > this.width + 0.2f) {
+			this.borderWidth = this.width + 0.2f;
+		}
 		// load text
 		TextMaster.loadText(this);
 	}
@@ -80,7 +102,7 @@ public class GUIText {
 	}
 
 	/**
-	 * Set the colour of the text.
+	 * Set the color of the text.
 	 * 
 	 * @param r
 	 *            - red value, between 0 and 1.
@@ -89,15 +111,77 @@ public class GUIText {
 	 * @param b
 	 *            - blue value, between 0 and 1.
 	 */
-	public void setColour(float r, float g, float b) {
-		colour.set(r, g, b);
+	public void setColor(float r, float g, float b) {
+		color.set(r, g, b);
 	}
 
 	/**
-	 * @return the colour of the text.
+	 * @return the color of the text.
 	 */
-	public Vector3f getColour() {
-		return colour;
+	public Vector3f getColor() {
+		return color;
+	}
+	
+	/**
+	 * Set the outlineColor of the text.
+	 * 
+	 * @param r
+	 *            - red value, between 0 and 1.
+	 * @param g
+	 *            - green value, between 0 and 1.
+	 * @param b
+	 *            - blue value, between 0 and 1.
+	 */
+	public void setOutlineColor(float r, float g, float b) {
+		outlineColor.set(r, g, b);
+	}
+
+	/**
+	 * @return the outlineColor of the text.
+	 */
+	public Vector3f getOutlineColor() {
+		return outlineColor;
+	}
+
+	
+	public float getWidth() {
+		return width;
+	}
+
+	public void setWidth(float width) {
+		this.width = width;
+	}
+
+	public float getEdge() {
+		return edge;
+	}
+
+	public void setEdge(float edge) {
+		this.edge = edge;
+	}
+
+	public float getBorderWidth() {
+		return borderWidth;
+	}
+
+	public void setBorderWidth(float borderWidth) {
+		this.borderWidth = borderWidth;
+	}
+
+	public float getBorderEdge() {
+		return borderEdge;
+	}
+
+	public void setBorderEdge(float borderEdge) {
+		this.borderEdge = borderEdge;
+	}
+
+	public Vector2f getOffset() {
+		return offset;
+	}
+
+	public void setOffset(Vector2f offset) {
+		this.offset = offset;
 	}
 
 	/**

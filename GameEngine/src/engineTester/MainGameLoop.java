@@ -48,8 +48,8 @@ public class MainGameLoop {
 		
 		//***************************Fonts/Text*******************************
 		FontType font = new FontType(loader.loadFontTexture("segoe"), new File("res/segoe.fnt"));
-		GUIText text = new GUIText("Test Text!!!", 5, font, new Vector2f(0.5f,0), 0.5f, true);
-		text.setColour(0, 0, 0);
+		GUIText text = new GUIText("Test Text!!!", 1, font, new Vector2f(0,0), 1f, true);
+		//text.setColor(0, 0, 0);
 		
 		
 		//***************************Terrain Textures*******************************
