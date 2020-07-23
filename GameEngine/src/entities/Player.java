@@ -9,7 +9,7 @@ import terrain.Terrain;
 
 public class Player extends Entity{
 
-	private static final float GRAVITY = -9.8f;
+	public static final float GRAVITY = -9.8f;
 	private static final float TERMINAL_VELOCITY = 50f;
 	private static final float JUMP_POWER = 1;
 

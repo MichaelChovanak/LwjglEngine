@@ -26,6 +26,9 @@ import fontRendering.TextMaster;
 import guis.GUIRenderer;
 import guis.GUITexture;
 import models.TexturedModel;
+import particles.ParticleMaster;
+import particles.ParticleSystem;
+import particles.ParticleTexture;
 import renderEngine.DisplayManager;
 import renderEngine.Loader;
 import renderEngine.MasterRenderer;
@@ -44,6 +47,7 @@ public class MainGameLoop {
 		GUIRenderer guiRenderer = new GUIRenderer(loader);
 		MasterRenderer renderer = new MasterRenderer(loader);
 		TextMaster.init(loader);
+		ParticleMaster.init(loader, renderer.getProjectionMatrix());
 		
 		
 		//***************************Fonts/Text*******************************
@@ -109,7 +113,7 @@ public class MainGameLoop {
 		
 
 		//***************************Player/Camera*********************************
-		Player player = new Player(person, new Vector3f(0,0,0), 0, 180, 0, 0.4f);
+		Player player = new Player(person, new Vector3f(200,10,-200), 0, 180, 0, 0.4f);
 		Camera camera = new Camera(player);
 		MousePicker mousePicker = new MousePicker(camera, renderer.getProjectionMatrix());
 
@@ -120,6 +124,11 @@ public class MainGameLoop {
 		//guis.add(gui);
 		
 		
+		//***************************Particle Systems*******************************
+		ParticleTexture particleTexture = new ParticleTexture(loader.loadTexture("particleAtlas"), 4);
+		ParticleSystem particleSystem = new ParticleSystem(50, 30, 1, 5, particleTexture);
+		ParticleTexture particleTexture2 = new ParticleTexture(loader.loadTexture("particleStar"), 1);
+		ParticleSystem particleSystem2 = new ParticleSystem(50, 10, 2, 2, particleTexture2);
 		
 		
 		while(!Display.isCloseRequested())
@@ -127,7 +136,10 @@ public class MainGameLoop {
 			player.move(terrain0);
 			camera.move();
 			
+			
+			
 			mousePicker.update();
+			ParticleMaster.update();
 			//System.out.println(mousePicker.getCurrentRay());
 			
 			renderer.processEntity(player);
@@ -138,6 +150,9 @@ public class MainGameLoop {
 				renderer.processEntity(entity);
 			}
 			renderer.render(lights, camera);
+			particleSystem.generateParticles(new Vector3f(200,0,-200));
+			particleSystem2.generateParticles(new Vector3f(200,0,-200));
+			ParticleMaster.render(camera);
 			guiRenderer.render(guis);
 			TextMaster.render();
 			DisplayManager.updateDisplay();
@@ -146,6 +161,7 @@ public class MainGameLoop {
 			}
 		}
 		TextMaster.cleanUp();
+		ParticleMaster.cleanUp();
 		guiRenderer.cleanUp();
 		renderer.cleanUp();
 		loader.cleanUp();
