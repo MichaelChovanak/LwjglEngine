@@ -32,6 +32,7 @@ import particles.ParticleTexture;
 import renderEngine.DisplayManager;
 import renderEngine.Loader;
 import renderEngine.MasterRenderer;
+import shadows.ShadowMapMasterRenderer;
 import terrain.Terrain;
 import textures.TerrainTexture;
 import textures.TerrainTexturePack;
@@ -41,14 +42,18 @@ public class MainGameLoop {
 
 	public static void main(String[] args) 
 	{
+
+		
 		//***************************Management*******************************
 		DisplayManager.createDisplay();
 		Loader loader = new Loader();
 		GUIRenderer guiRenderer = new GUIRenderer(loader);
-		MasterRenderer renderer = new MasterRenderer(loader);
+		TexturedModel person = new TexturedModel("person", loader);
+		Player player = new Player(person, new Vector3f(200,10,-200), 0, 180, 0, 0.4f);
+		Camera camera = new Camera(player);
+		MasterRenderer renderer = new MasterRenderer(loader, camera);
 		TextMaster.init(loader);
 		ParticleMaster.init(loader, renderer.getProjectionMatrix());
-		
 		
 		//***************************Fonts/Text*******************************
 		FontType font = new FontType(loader.loadFontTexture("segoe"), new File("res/segoe.fnt"));
@@ -78,7 +83,6 @@ public class MainGameLoop {
 		TexturedModel fern = new TexturedModel("fern", loader);
 		fern.getTexture().setHasTransparency(true);
 		fern.getTexture().setNumberOfRows(2);
-		TexturedModel person = new TexturedModel("person", loader);
 
 
 		//***************************Entities*********************************
@@ -104,7 +108,7 @@ public class MainGameLoop {
 		
 
 		//***************************Lights*********************************
-		Light sun = new Light(new Vector3f(0,1000,-7000), new Vector3f(0.4f,0.4f,0.4f));
+		Light sun = new Light(new Vector3f(100000,10000000,-70000000), new Vector3f(0.4f,0.4f,0.4f));
 		List<Light> lights = new ArrayList<>();
 		lights.add(sun);
 		lights.add(new Light(new Vector3f(-200,10,-200), new Vector3f(10,0,0), new Vector3f(1,0.01f,0.002f)));
@@ -112,16 +116,18 @@ public class MainGameLoop {
 		lights.add(new Light(new Vector3f(200,10,-200), new Vector3f(0,0,10), new Vector3f(1,0.01f,0.002f)));
 		
 
-		//***************************Player/Camera*********************************
-		Player player = new Player(person, new Vector3f(200,10,-200), 0, 180, 0, 0.4f);
-		Camera camera = new Camera(player);
+		//***************************MousePicker*********************************
+		
 		MousePicker mousePicker = new MousePicker(camera, renderer.getProjectionMatrix());
+
 
 		
 		//***************************GUI/Text*********************************
 		List<GUITexture> guis = new ArrayList<GUITexture>();
 		GUITexture gui = new GUITexture(loader.loadTexture("socuwan"), new Vector2f(0.5f,0.5f), new Vector2f(0.25f, 0.25f));
 		//guis.add(gui);
+		//GUITexture shadowMap = new GUITexture(renderer.getShadowMapTexture(), new Vector2f(0.5f, 0.5f), new Vector2f(0.5f, 0.5f));
+		//guis.add(shadowMap);
 		
 		
 		//***************************Particle Systems*******************************
@@ -142,16 +148,18 @@ public class MainGameLoop {
 			ParticleMaster.update();
 			//System.out.println(mousePicker.getCurrentRay());
 			
+			
 			renderer.processEntity(player);
 			renderer.processTerrain(terrain0);
 			//renderer.processTerrain(terrain1);
+			renderer.renderShadowMap(entities, sun);
 			for(Entity entity: entities)
 			{
 				renderer.processEntity(entity);
 			}
 			renderer.render(lights, camera);
-			particleSystem.generateParticles(new Vector3f(200,0,-200));
-			particleSystem2.generateParticles(new Vector3f(200,0,-200));
+			particleSystem.generateParticles(new Vector3f(200,30,-200));
+			particleSystem2.generateParticles(new Vector3f(200,30,-200));
 			ParticleMaster.render(camera);
 			guiRenderer.render(guis);
 			TextMaster.render();
