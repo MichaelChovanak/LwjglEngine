@@ -146,7 +146,6 @@ public class MainGameLoop {
 			
 			mousePicker.update();
 			ParticleMaster.update();
-			//System.out.println(mousePicker.getCurrentRay());
 			
 			
 			renderer.processEntity(player);
