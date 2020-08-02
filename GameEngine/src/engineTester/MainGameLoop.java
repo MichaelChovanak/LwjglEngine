@@ -29,6 +29,8 @@ import models.TexturedModel;
 import particles.ParticleMaster;
 import particles.ParticleSystem;
 import particles.ParticleTexture;
+import postProcessing.Fbo;
+import postProcessing.PostProcessing;
 import renderEngine.DisplayManager;
 import renderEngine.Loader;
 import renderEngine.MasterRenderer;
@@ -40,6 +42,8 @@ import toolbox.MousePicker;
 
 public class MainGameLoop {
 
+	public static List<Entity> entitiesList;
+	
 	public static void main(String[] args) 
 	{
 
@@ -86,7 +90,7 @@ public class MainGameLoop {
 
 
 		//***************************Entities*********************************
-		List<Entity> entities = new ArrayList<Entity>();
+		entitiesList = new ArrayList<Entity>();
 		Random random = new Random();
 		float x, y, z;
 		for(int i = 0; i < 500; i++)
@@ -94,7 +98,7 @@ public class MainGameLoop {
 			x = random.nextFloat()*800 - 400;
 			z =  random.nextFloat()*-600;
 			y = terrain0.getTerrainHeight(x, z);
-			entities.add(new Entity(tree, new Vector3f(x, y, z), 0, 0, 0, 5));
+			entitiesList.add(new Entity(tree, new Vector3f(x, y, z), 0, 0, 0, 5));
 			/*
 			x = random.nextFloat()*800 - 400;
 			z =  random.nextFloat()*-600;
@@ -103,8 +107,9 @@ public class MainGameLoop {
 			x = random.nextFloat()*800 - 400;
 			z =  random.nextFloat()*-600;
 			y = terrain0.getTerrainHeight(x, z);
-			entities.add(new Entity(fern, random.nextInt(4), new Vector3f(x, y, z), 0, 0, 0, 0.6f));
+			entitiesList.add(new Entity(fern, random.nextInt(4), new Vector3f(x, y, z), 0, 0, 0, 0.6f));
 		}
+		entitiesList.add(player);
 		
 
 		//***************************Lights*********************************
@@ -137,29 +142,34 @@ public class MainGameLoop {
 		ParticleSystem particleSystem2 = new ParticleSystem(50, 10, 2, 2, particleTexture2);
 		
 		
+		Fbo fbo = new Fbo(Display.getWidth(), Display.getHeight(), Fbo.DEPTH_RENDER_BUFFER);
+		PostProcessing.init(loader);
+		
 		while(!Display.isCloseRequested())
 		{
 			player.move(terrain0);
 			camera.move();
-			
-			
-			
 			mousePicker.update();
+			renderer.renderShadowMap(entitiesList, sun);
 			ParticleMaster.update();
 			
-			
+
+			particleSystem.generateParticles(new Vector3f(200,30,-200));
+			particleSystem2.generateParticles(new Vector3f(200,30,-200));
 			renderer.processEntity(player);
 			renderer.processTerrain(terrain0);
 			//renderer.processTerrain(terrain1);
-			renderer.renderShadowMap(entities, sun);
-			for(Entity entity: entities)
+			for(Entity entity: entitiesList)
 			{
 				renderer.processEntity(entity);
 			}
+			fbo.bindFrameBuffer();
 			renderer.render(lights, camera);
-			particleSystem.generateParticles(new Vector3f(200,30,-200));
-			particleSystem2.generateParticles(new Vector3f(200,30,-200));
 			ParticleMaster.render(camera);
+			fbo.unbindFrameBuffer();
+			PostProcessing.doPostProcessing(fbo.getColourTexture());
+			
+			
 			guiRenderer.render(guis);
 			TextMaster.render();
 			DisplayManager.updateDisplay();
@@ -167,6 +177,9 @@ public class MainGameLoop {
 				break;
 			}
 		}
+		
+		PostProcessing.cleanUp();
+		fbo.cleanUp();
 		TextMaster.cleanUp();
 		ParticleMaster.cleanUp();
 		guiRenderer.cleanUp();

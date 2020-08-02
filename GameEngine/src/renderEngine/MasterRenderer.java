@@ -10,6 +10,7 @@ import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL13;
 import org.lwjgl.util.vector.Matrix4f;
 
+import engineTester.MainGameLoop;
 import entities.Camera;
 import entities.Entity;
 import entities.Light;
