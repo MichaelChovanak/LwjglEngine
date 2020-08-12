@@ -81,24 +81,26 @@ public class MainGameLoop {
 		
 		//***************************TexturedModels*********************************
 		TexturedModel tree = new TexturedModel("tree", loader);
+		//tree.getTexture().setHasTransparency(true);
 		TexturedModel grass = new TexturedModel("grass", loader);
 		grass.getTexture().setHasTransparency(true);
 		grass.getTexture().setUseFakeLighting(true);
 		TexturedModel fern = new TexturedModel("fern", loader);
 		fern.getTexture().setHasTransparency(true);
 		fern.getTexture().setNumberOfRows(2);
-
+		TexturedModel test = new TexturedModel("random", loader);
 
 		//***************************Entities*********************************
 		entitiesList = new ArrayList<Entity>();
+		entitiesList.add(new Entity(test, new Vector3f(200,10,-200), 0, 0, 0, 1));
 		Random random = new Random();
 		float x, y, z;
 		for(int i = 0; i < 500; i++)
 		{
-			x = random.nextFloat()*800 - 400;
-			z =  random.nextFloat()*-600;
+			x = random.nextFloat()*1800 - 400;
+			z =  random.nextFloat()*-1600;
 			y = terrain0.getTerrainHeight(x, z);
-			entitiesList.add(new Entity(tree, new Vector3f(x, y, z), 0, 0, 0, 5));
+			entitiesList.add(new Entity(tree, new Vector3f(x, y, z), 0, 0, 0, 1));
 			/*
 			x = random.nextFloat()*800 - 400;
 			z =  random.nextFloat()*-600;
@@ -142,9 +144,13 @@ public class MainGameLoop {
 		ParticleSystem particleSystem2 = new ParticleSystem(50, 10, 2, 2, particleTexture2);
 		
 		
-		Fbo fbo = new Fbo(Display.getWidth(), Display.getHeight(), Fbo.DEPTH_RENDER_BUFFER);
+		//Fbo multisampleFbo = new Fbo(Display.getWidth(), Display.getHeight());
+		Fbo outputFbo = new Fbo(Display.getWidth(), Display.getHeight(), Fbo.DEPTH_TEXTURE);
 		PostProcessing.init(loader);
 		
+		
+
+		//***************************Game Loop*******************************
 		while(!Display.isCloseRequested())
 		{
 			player.move(terrain0);
@@ -163,12 +169,11 @@ public class MainGameLoop {
 			{
 				renderer.processEntity(entity);
 			}
-			fbo.bindFrameBuffer();
+			outputFbo.bindFrameBuffer();
 			renderer.render(lights, camera);
 			ParticleMaster.render(camera);
-			fbo.unbindFrameBuffer();
-			PostProcessing.doPostProcessing(fbo.getColourTexture());
-			
+			outputFbo.unbindFrameBuffer();
+			PostProcessing.doPostProcessing(outputFbo.getColorTexture());
 			
 			guiRenderer.render(guis);
 			TextMaster.render();
@@ -179,7 +184,8 @@ public class MainGameLoop {
 		}
 		
 		PostProcessing.cleanUp();
-		fbo.cleanUp();
+		//multisampleFbo.cleanUp();
+		outputFbo.cleanUp();
 		TextMaster.cleanUp();
 		ParticleMaster.cleanUp();
 		guiRenderer.cleanUp();

@@ -2,14 +2,30 @@ package textures;
 
 public class ModelTexture {
 	private int textureID;
+	private int specularID;
 	
 	private float shineDamper = 1.0f;
 	private float reflectivity = 0;
 	
 	private boolean hasTransparency = false;
 	private boolean useFakeLighting = false;
+	private boolean hasSpecularMap = false;
 	
 	private int numberOfRows = 1;
+	
+	public ModelTexture(int textureID)
+	{
+		this.textureID = textureID;
+	}
+	
+	public void setSpecularMap(int specularID) {
+		this.specularID = specularID;
+		this.hasSpecularMap = true;
+	}
+	
+	public boolean hasSpecularMap() {
+		return hasSpecularMap;
+	}
 	
 	public int getNumberOfRows() {
 		return numberOfRows;
@@ -49,11 +65,6 @@ public class ModelTexture {
 
 	public void setReflectivity(float reflectivity) {
 		this.reflectivity = reflectivity;
-	}
-
-	public ModelTexture(int textureID)
-	{
-		this.textureID = textureID;
 	}
 	
 	public int getID()

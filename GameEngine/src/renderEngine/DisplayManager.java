@@ -28,7 +28,7 @@ public class DisplayManager {
 		{
 			Display.setDisplayMode(new DisplayMode(WIDTH, HEIGHT));
 			Display.setLocation(0, 0);
-			Display.create(new PixelFormat().withSamples(8), attribs);
+			Display.create(new PixelFormat().withDepthBits(24), attribs);
 			Display.setTitle("LWJGL 2 Game");
 			GL11.glEnable(GL13.GL_MULTISAMPLE);
 		}

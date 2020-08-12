@@ -140,12 +140,15 @@ public class Camera
 		float offsetZ = (float) (horizontalDistance * Math.cos(Math.toRadians(theta)));
 		position.x = player.getPosition().x - offsetX;
 		position.z = player.getPosition().z - offsetZ;
-		position.y = player.getPosition().y + verticalDistance;
+		position.y = player.getPosition().y + verticalDistance + 4;
 	}
 	
 	private void calculateZoom() {
-		float zoomLevel = Mouse.getDWheel() * 0.1f;
+		float zoomLevel = Mouse.getDWheel() * 0.05f;
 		distanceFromPlayer -= zoomLevel;
+		if(distanceFromPlayer < 0) {
+			distanceFromPlayer = 0;
+		}
 	}
 	
 	private void calculatePitch() {
